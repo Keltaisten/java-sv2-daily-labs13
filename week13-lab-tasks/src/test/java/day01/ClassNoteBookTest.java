@@ -21,7 +21,4 @@ class ClassNoteBookTest {
         assertEquals(5,classNoteBook.getStudents().get(new Student(5,"John")).get(1));
     }
 
-    @Test
-    void addMark() {
-    }
 }
