@@ -22,7 +22,7 @@ public class Quiz {
                 putDataToContestants(bf.readLine());
             }
         } catch (IOException ioException) {
-            throw new IllegalStateException("Cannot read file!");
+            throw new IllegalStateException("Cannot read file!", ioException);
         }
     }
 
