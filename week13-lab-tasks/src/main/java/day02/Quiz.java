@@ -8,44 +8,44 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Quiz {
-    private String goodAnswers;
-    private Map<String, String> contestants = new HashMap<>();
+    private String correctAnswers;
+    private Map<String, String> contestantsAnswers = new HashMap<>();
 
     public Quiz(Path path) {
-        readCompetitionData(path);
+        readContestantAnswersFromFile(path);
     }
 
-    private void readCompetitionData(Path path) {
+    private void readContestantAnswersFromFile(Path path) {
         try (BufferedReader bf = Files.newBufferedReader(path)) {
-            goodAnswers = bf.readLine();
+            correctAnswers = bf.readLine();
             while (bf.ready()) {
-                putDataToContestants(bf.readLine());
+                parseLine(bf.readLine());
             }
         } catch (IOException ioException) {
             throw new IllegalStateException("Cannot read file!", ioException);
         }
     }
 
-    private void putDataToContestants(String readLine) {
-        String[] fields = readLine.split(" ");
+    private void parseLine(String line) {
+        String[] fields = line.split(" ");
         String contestant = fields[0];
-        if (contestants.containsKey(contestant)) {
-            contestants.replace(contestant, contestants.get(contestant).concat(fields[1]));
+        if (contestantsAnswers.containsKey(contestant)) {
+            contestantsAnswers.replace(contestant, contestantsAnswers.get(contestant).concat(fields[1]));
         } else {
-            contestants.put(contestant, fields[1]);
+            contestantsAnswers.put(contestant, fields[1]);
         }
     }
 
     public boolean isAnswerCorrect(String contestant, int number) {
-        return contestants.get(contestant).charAt(number - 1) == goodAnswers.charAt(number - 1);
+        return contestantsAnswers.get(contestant).charAt(number - 1) == correctAnswers.charAt(number - 1);
     }
 
     private int getContestantTotalPoints(String code) {
         int points = 0;
-        for (int i = 0; i < contestants.get(code).length(); i++) {
-            if (contestants.get(code).charAt(i) == goodAnswers.charAt(i)) {
-                points++;
-            } else if (contestants.get(code).charAt(i) != 'X') {
+        for (int i = 0; i < contestantsAnswers.get(code).length(); i++) {
+            if (contestantsAnswers.get(code).charAt(i) == correctAnswers.charAt(i)) {
+                points += i + 1;
+            } else if (contestantsAnswers.get(code).charAt(i) != 'X') {
                 points -= 2;
             }
         }
@@ -55,7 +55,7 @@ public class Quiz {
     public String getWinner() {
         String winner = null;
         int maxPoints = 0;
-        for(String code : contestants.keySet()){
+        for(String code : contestantsAnswers.keySet()){
             int actualPoints = getContestantTotalPoints(code);
             if(maxPoints < actualPoints){
                 maxPoints = actualPoints;
@@ -69,8 +69,8 @@ public class Quiz {
         return winner;
     }
 
-    public Map<String, String> getContestants() {
-        return contestants;
+    public Map<String, String> getContestantsAnswers() {
+        return contestantsAnswers;
     }
 
 }

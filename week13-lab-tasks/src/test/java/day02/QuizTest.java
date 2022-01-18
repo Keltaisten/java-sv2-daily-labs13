@@ -24,7 +24,7 @@ class QuizTest {
 
     @Test
     void testCreate() {
-        assertEquals(4,quiz.getContestants().size());
-        assertEquals("ACCBX",quiz.getContestants().get("AB123"));
+        assertEquals(4,quiz.getContestantsAnswers().size());
+        assertEquals("ACCBX",quiz.getContestantsAnswers().get("AB123"));
     }
 }
